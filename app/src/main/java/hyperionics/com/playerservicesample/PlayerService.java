@@ -4,14 +4,13 @@ import android.app.Service;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.os.IBinder;
-import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
-import android.util.Log;
 import android.view.KeyEvent;
+
+import java.util.Objects;
 
 public class PlayerService extends Service {
     public static final String TAG = "MPS";
@@ -63,18 +62,10 @@ public class PlayerService extends Service {
                 .setState(PlaybackStateCompat.STATE_PAUSED, 0, 0)
                 .setActions(PlaybackStateCompat.ACTION_PLAY_PAUSE)
                 .build());
-//        mediaSession.setMetadata(new MediaMetadataCompat.Builder()
-//                .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, "Test Artist")
-//                .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, "Test Album")
-//                .putString(MediaMetadataCompat.METADATA_KEY_TITLE, "Test Track Name")
-//                .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, 10000)
-//                .putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART,
-//                        BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
-//                .build());
         mediaSession.setCallback(mMediaSessionCallback);
 
         AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-        audioManager.requestAudioFocus(new AudioManager.OnAudioFocusChangeListener() {
+        Objects.requireNonNull(audioManager).requestAudioFocus(new AudioManager.OnAudioFocusChangeListener() {
             @Override
             public void onAudioFocusChange(int focusChange) {
                 // Ignore
