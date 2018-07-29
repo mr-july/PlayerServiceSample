@@ -19,7 +19,7 @@ public class PlayerService extends Service {
     private final MediaSessionCompat.Callback mMediaSessionCallback
             = new MediaSessionCompat.Callback() {
 
-        @Override
+        /*@Override
         public boolean onMediaButtonEvent(Intent mediaButtonEvent) {
             final String intentAction = mediaButtonEvent.getAction();
             if (Intent.ACTION_MEDIA_BUTTON.equals(intentAction)) {
@@ -48,14 +48,22 @@ public class PlayerService extends Service {
                 }
             }
             return false;
+        }*/
+
+        @Override
+        public void onPlay () {
+            MainActivity.showText("PLAY requested");
+        }
+
+        @Override
+        public void onPause () {
+            MainActivity.showText("PAUSE requested");
         }
     };
 
     @Override
     public void onCreate() {
         super.onCreate();
-        ComponentName receiver = new ComponentName(getPackageName(), RemoteReceiver.class.getName());
-        mediaSession = new MediaSessionCompat(this, "PlayerService", receiver, null);
         mediaSession.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS |
                 MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
         mediaSession.setPlaybackState(new PlaybackStateCompat.Builder()
@@ -63,6 +71,7 @@ public class PlayerService extends Service {
                 .setActions(PlaybackStateCompat.ACTION_PLAY_PAUSE)
                 .build());
         mediaSession.setCallback(mMediaSessionCallback);
+        // mediaSession.setMediaButtonReceiver(???);
 
         AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         Objects.requireNonNull(audioManager).requestAudioFocus(new AudioManager.OnAudioFocusChangeListener() {
